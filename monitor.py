@@ -79,7 +79,7 @@ def generate_html(results):
     <body>
         <h2>Test Results - {results['timestamp']}</h2>
         <div class="server">
-            Server: {results['server'].get('sponsor')} - {results['server'].get('name')}
+            Server: {results['server']['sponsor']} - {results['server']['name']}
         </div>
         <div class="result">
             Download: {results['download'] / 1_000_000:.2f} Mbps
