@@ -15,11 +15,10 @@ def test_speed():
     try:
         print("Starting speed test...")
         
-        config = load_config()
-        
         # Initialize speedtest
         st = speedtest.Speedtest()
         
+        config = load_config()
         if config and config.get('id'):  # Check if config exists and has server id
             print(f"Selected server: {config['sponsor']} - {config['name']}")
             # Set the chosen server with all information from config
@@ -30,12 +29,13 @@ def test_speed():
             print("Configuration not found or server not specified.")
             print("Getting best server automatically...")
             st.get_best_server()
-            # Save server info for display
-            config = {
-                'name': st._best['name'],
-                'sponsor': st._best['sponsor'],
-                'country': st._best['country']
-            }
+        
+        # Get actual server information used in test
+        server_info = {
+            'name': st._best['name'],
+            'sponsor': st._best['sponsor'],
+            'country': st._best['country']
+        }
         
         print("Testing download speed...")
         download_speed = st.download()
@@ -54,7 +54,8 @@ def test_speed():
             'download': round(download_speed, 2),
             'upload': round(upload_speed, 2),
             'ping': round(ping),
-            'jitter': round(jitter)
+            'jitter': round(jitter),
+            'server': server_info  # Always use actual server info
         }
         
         return results
@@ -78,7 +79,7 @@ def generate_html(results, config):
     <body>
         <h2>Test Results - {results['timestamp']}</h2>
         <div class="server">
-            Server: {config.get('sponsor')} - {config.get('name')}
+            Server: {results['server'].get('sponsor')} - {results['server'].get('name')}
         </div>
         <div class="result">
             Download: {results['download'] / 1_000_000:.2f} Mbps
@@ -100,11 +101,8 @@ def save_results(results):
     if results is None:
         return
         
-    # Load config to get server information
-    config = load_config()
-    
     # Generate and save HTML content
-    html_content = generate_html(results, config)
+    html_content = generate_html(results, {})
     filename = 'results.html'
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(html_content)
@@ -113,7 +111,7 @@ def save_results(results):
     
     # Display results
     print("\nTest Results:")
-    print(f"Server: {config.get('sponsor')} - {config.get('name')}")
+    print(f"Server: {results['server'].get('sponsor')} - {results['server'].get('name')}")
     print(f"Download: {results['download'] / 1_000_000:.2f} Mbps")
     print(f"Upload: {results['upload'] / 1_000_000:.2f} Mbps")
     print(f"Ping: {results['ping']} ms")
