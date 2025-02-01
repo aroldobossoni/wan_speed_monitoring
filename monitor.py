@@ -30,13 +30,6 @@ def test_speed():
             print("Getting best server automatically...")
             st.get_best_server()
         
-        # Get actual server information used in test
-        server_info = {
-            'name': st._best['name'],
-            'sponsor': st._best['sponsor'],
-            'country': st._best['country']
-        }
-        
         print("Testing download speed...")
         download_speed = st.download()
         
@@ -48,6 +41,13 @@ def test_speed():
         
         print("Getting jitter...")
         jitter = st.results.ping_jitter if hasattr(st.results, 'ping_jitter') else 0
+        
+        # Get actual server information used in test after all tests are complete
+        server_info = {
+            'name': st._best['name'],
+            'sponsor': st._best['sponsor'],
+            'country': st._best['country']
+        }
         
         results = {
             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
