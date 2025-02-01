@@ -102,9 +102,6 @@ def save_results(results):
         
     # Load config to get server information
     config = load_config()
-    if config is None:
-        print("Configuration file not found.")
-        return
     
     # Generate and save HTML content
     html_content = generate_html(results, config)
