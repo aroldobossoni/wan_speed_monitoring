@@ -64,7 +64,7 @@ def test_speed():
         print(f"Error performing speed test: {str(e)}")
         return None
 
-def generate_html(results, config):
+def generate_html(results):
     """Generate HTML content with test results"""
     return f"""
     <html>
@@ -102,7 +102,7 @@ def save_results(results):
         return
         
     # Generate and save HTML content
-    html_content = generate_html(results, {})
+    html_content = generate_html(results)
     filename = 'results.html'
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(html_content)
